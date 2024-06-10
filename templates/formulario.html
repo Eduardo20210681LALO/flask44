@@ -1,44 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Clasificador de Insectos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificador de Serpientes</title>
+    <!-- Include the Tailwind CSS CDN link -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Estilo adicional para el formulario */
+        @media (min-width: 640px) {
+            .form-container {
+                max-width: 640px;
+            }
+        }
+    </style>
     <script>
         function clasificarInsecto(event) {
             event.preventDefault();
-            const abdomen = document.getElementById('abdomen').value;
-            const antena = document.getElementById('antena').value;
+            const genus = document.getElementById('genus').value;
+            const class_id = document.getElementById('class_id').value;
+            const snake_sub_family = document.getElementById('snake_sub_family').value;
+            const poisonous = document.getElementById('poisonous').value;
 
             fetch('/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `abdomen=${abdomen}&antena=${antena}`,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('resultado').innerText = 'Error: ' + data.error;
-                } else {
-                    document.getElementById('resultado').innerText = 'El insecto es un@: ' + data.categoria;
-                }
-            })
-            .catch(error => {
-                document.getElementById('resultado').innerText = 'Error en la solicitud.';
-                console.error('Error:', error);
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `genus=${genus}&class_id=${class_id}&snake_sub_family=${snake_sub_family}&poisonous=${poisonous}`,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('resultado').innerText = 'Error: ' + data.error;
+                    } else {
+                        document.getElementById('resultado').innerText = 'La serpiente pertenece a la familia: ' + data.categoria;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('resultado').innerText = 'Error en la solicitud.';
+                    console.error('Error:', error);
+                });
         }
     </script>
 </head>
-<body>
-    <h1>Clasificador de Insectos</h1>
-    <form id="formulario" onsubmit="clasificarInsecto(event)">
-        <label for="abdomen">Longitud del Abdomen:</label>
-        <input type="text" id="abdomen" name="abdomen"><br><br>
-        <label for="antena">Longitud de las Antenas:</label>
-        <input type="text" id="antena" name="antena"><br><br>
-        <input type="submit" value="Enviar">
-    </form>
-    <p id="resultado"></p>
+
+<body class="bg-gray-100 p-8">
+    <div class="form-container mx-auto">
+        <h1 class="text-2xl mb-4">Clasificador de Serpientes</h1>
+        <form id="formulario" onsubmit="clasificarInsecto(event)" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label for="genus" class="block text-gray-700 text-sm font-bold mb-2">Tipo de genero:</label>
+                <input type="text" id="genus" name="genus" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="class_id" class="block text-gray-700 text-sm font-bold mb-2">Tipo de clase:</label>
+                <input type="text" id="class_id" name="class_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="snake_sub_family" class="block text-gray-700 text-sm font-bold mb-2">Tipo de familia:</label>
+                <input type="text" id="snake_sub_family" name="snake_sub_family" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="poisonous" class="block text-gray-700 text-sm font-bold mb-2">Es venenosa:</label>
+                <input type="text" id="poisonous" name="poisonous" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Enviar</button>
+            </div>
+        </form>
+        <p id="resultado" class="text-gray-800"></p>
+    </div>
+    
 </body>
+
 </html>
